@@ -1,0 +1,177 @@
+
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<script type="text/javascript" src="/jquery.js"></script>
+<script type="text/javascript">
+
+</script>
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<title>中科软系统管理中心</title>
+<!-- Site CSS -->
+
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/font-awesome.min.css" rel="stylesheet">
+<link href="css/site.min.css" rel="stylesheet">
+<link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+<style>
+.job-hot {
+	position: absolute;
+	color: #d9534f;
+	right: 0;
+	top: 15px;
+}
+/*!* #onediv{
+	width:20px;
+	height:19px;
+	position:absolute;
+	left:1181px;
+	top:39px;"
+	!* width:60px;
+	height:22px;
+	 position:relative;
+	top:0%;
+	left:97%;  *!
+	background:url(../images/index/logout.png) no-repeat  fixed;
+}**!*/
+.img{
+	width:1349px;
+	height:546px;
+  	background: url("../static/images/index/background.png") no-repeat  fixed;
+    background-size: cover;
+} 
+
+.caption{
+	float:left;
+	width:260px;
+	height:368px;
+	/* background:url("../images/index/square.png") no-repeat  fixed; */
+	background: -webkit-linear-gradient(#253B91,#091241);
+	background-size:cover;
+}
+
+#button {
+    width: 118px;
+    height: 36px;
+    background: -webkit-linear-gradient(#77A5FF,#2F7AEF);
+    border: 1px solid rgba(255,255,255,0.33);
+    margin: auto;
+    position: absolute;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom:5px;
+    padding:5px;
+}
+
+
+</style>
+<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+	
+	<div class="container-scroller">
+		<!-- partial -->
+		<div class="container-fluid page-body-wrapper">
+		 
+			<div class="main-panel">
+			<div class="img">
+				<div class="content-wrapper">
+				
+					<div class="container projects">
+					
+						<div class="page-header">
+							<h3 class="page-title">
+								<span
+									class="page-title-icon bg-gradient-primary text-white mr-2">
+									<i class="mdi mdi-home"></i>
+								</span> <!-- 系统权限中心 -->
+								<input  type="image" src="../images/index/system.png" style="width:216px;height:50px;position:absolute;left:120px;top:16px;">
+							</h3>
+							<!-- 获取用户名称 -->
+							<!-- <div id="twodiv">
+							<input  type="image" src="../images/index/user.png" style="width:12px;height:14px;position:absolute;left:1020px;top:40px;">
+							<p style="width:56px;height:20px;position:absolute;left:1035px;top:35px;font-size:14px;color:rgba(255,255,255,1)">用户名称</p>
+							<input  type="image" src="../images/index/lujingfuzhi.png" style="width:6px;height:5px;position:absolute;left:1109px;top:45px;">
+							</div> -->
+							<div id="onediv" >
+							<a href="/logout2"><img src="../images/index/logout.png" style="top:35px;width:20px;height:19px;position:absolute;
+							right:63px;top:39px;cursor:pointer;"></img></a>
+							
+							</div>
+							
+						</div>
+					</div>	
+					
+						<div class="row">
+						
+							<div th:each="appl : ${userapps}" class="col-sm-6 col-md-4 col-lg-3 ">
+								<div class="thumbnail card bg-light card-img-holder"
+									style="height: 250px;">
+									<!-- <a th:href="${appl.baseUrl}" th:text="${appl.appEglName}" target="view_window"></a> -->
+									<div class="caption">
+										<h3>
+										<a th:href="${appl.baseUrl}"  target="view_window" ><br>
+										<small th:text="${appl.appChnName}" style="width:144px;height:33px;left:141px;top:172px;font-size:24px;font-family:PingFangSC-Medium;color:rgba(189,205,255,1);line-height:33px;margin:auto;"></small></a>
+										</h3>
+										 <a th:href="${appl.baseUrl}" th:text="${appl.appEglName}" target="view_window"
+										 style="width:105px;height:20px;font-size:14px;font-family:PingFangSC-Regular;font-weight:400;color:rgba(144,184,255,1);line-height:20px;text-align: center"></a>
+										<div >
+											<p th:text="${appl.applicationDesc}" style="width:256px;height:123px;font-size:14px;font-family:PingFangSC-Regular;color:rgba(138,181,255,1);font-weight:400;line-height:20px;margin:auto;"></p>
+										</div>
+										<div id="button"> 
+												<a th:href="${appl.baseUrl}"  target="view_window" style="font-family:PingFangSC-Medium;font-weight:500;color:white;line-height:22px;font-size: 20px;margin:auto;">
+												进入</a>
+										</div> 
+										<!-- 
+										联系人:<p th:text="${appl.contact}" style="margin-left:6px;float:left;">联系人1:</p>
+										<p th:text="${appl.tel}" style="margin-left:6px;float:left;"></p>
+										<p th:text="${appl.email}" style="margin-left:6px;float:left;"></p> 
+										-->
+									</div>
+								</div>
+							</div>
+							
+							
+							
+							
+						<!-- 
+							<div class="col-sm-6 col-md-4 col-lg-3 ">
+								<div class="thumbnail" style="height: 200px;">
+									<a href="http://127.0.0.1:8080/home"
+										title="Webpack 是前端资源模块化管理和打包工具" target="_blank"
+										onclick="_hmt.push([&#39;_trackEvent&#39;, &#39;tile&#39;, &#39;click&#39;, &#39;webpack&#39;])">
+									</a>
+									<div class="caption">
+										<h3>
+											<a href="http://127.0.0.1:8080/home"
+												title="Webpack 是前端资源模块化管理和打包工具" target="_blank"
+												onclick="_hmt.push([&#39;_trackEvent&#39;, &#39;tile&#39;, &#39;click&#39;, &#39;webpack&#39;])">Webpack<br>
+												<small>是前端资源模块化管理和打包工具</small></a>
+										</h3>
+										<p>Webpack
+											是当下最热门的前端资源模块化管理和打包工具。它可以将许多松散的模块按照依赖和规则打包成符合生产环境部署的前端资源。</p>
+									</div>
+								</div>
+							</div> -->
+			
+					
+						
+						
+						</div>
+					</div>
+
+				</div>
+				
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

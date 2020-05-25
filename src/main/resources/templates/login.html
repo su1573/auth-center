@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>人保统一登录</title>
+    <meta name="description" content="Ela Admin - HTML5 Admin Template">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link type="text/css" rel="stylesheet" th:href="@{/assets/css/normalize.css}">
+    <link type="text/css" rel="stylesheet" th:href="@{/assets/bootstrap-4.3.1-dist/css/bootstrap.min.css}">
+    <link type="text/css" rel="stylesheet" th:href="@{/assets/css/font-awesome.min.css}">
+    <link type="text/css" rel="stylesheet" th:href="@{/assets/css/style.css}">
+	<link rel="icon" type="image/x-icon" href="/images/favicon.ico">  
+
+
+
+<style>
+body {
+	margin: 0px;
+	background: url(../images/login/beijing2.png) no-repeat;
+	background-size: 100% 100%;
+	background-attachment: fixed;
+	background-color: #000000;
+}
+
+
+
+.login-form {
+    background: url(../images/login/denglu2.png);
+    width: 354px;
+    height: 450px;
+    background-size: cover;
+    position: relative;
+    right: -532px;
+    top: 19px;
+}
+
+
+
+#img {
+	width: 100px;
+	height: 70px;
+	background-image: url(../images/login/uname2.png);
+	display: inline-block;
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+	position: relative;
+	top: 24%;
+	left: 290px;
+	z-index: 2;
+}
+
+#uname {
+    background: url(../images/login/uname2.png) no-repeat 0 0;
+    background-size: 18px 20px;
+    background-position: 7px 10px;
+    height: 44px;
+    width: 249px;
+    padding-left: 33px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    line-height: 20px;
+    background-color: white;
+    z-index: 3;
+    position: relative;
+    left: 17px;
+    top: -76px;
+}
+
+
+#pwd {
+	background: url(../images/login/pwd2.png) no-repeat 0 0;
+    background-size: 18px 20px;
+    background-position: 7px 10px;
+    height: 44px;
+    width: 249px;
+    padding-left: 33px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    line-height: 20px;
+    background-color: white;
+    z-index: 3;
+    position: relative;
+    left: 17px;
+    top: -81px;
+
+}
+
+</style>
+
+
+
+
+</head>
+<body class="bg-dark">
+<div class="sufee-login d-flex align-content-center flex-wrap">
+    <div class="container">
+        <div class="login-content">
+        <br/><br/><br/><br/>
+        
+            
+            <div class="login-form">
+            
+            
+              <form th:action="@{/login}" method="post">
+                <br/><br/>
+                    <div class="form-group">
+                   		 <br/> <br/> <br/> <br/><br/><br/><br/>
+                        <input type="text" id="uname" class="form-control" name="username" placeholder="Username">
+                    </div>
+                    <br/>
+                    <div class="form-group">
+                        <input type="password" id="pwd" class="form-control" name="password" placeholder="Password" required="required">
+                    </div>
+                    
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                    <span style="color:red; position: relative; left:-29px;top:-89px " th:value="${msg}" th:text="${msg}"></span>
+                     
+                    <div class="form-group" style="display:none;">
+                        <label>toUrl</label>
+                        <input class="form-control" id="toUrl" name="toUrl" placeholder="toUrl" th:value="${toUrl}">
+                    </div>
+                   <br/><br/>
+                    <button type="submit" class="btn btn-success btn-flat m-b-30 m-t-30" style="font-size: 17px;width:249px;height:44px; position:relative;left:17px;top:-100px; padding:5px;background-color:#2FA4EFFF">登&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;录</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript" th:src="@{/assets/js/jquery-2.1.4.min.js}"></script>
+<script type="text/javascript" th:src="@{/assets/bootstrap-4.3.1-dist/js/bootstrap.min.js}"></script>
+<script type="text/javascript" th:src="@{/assets/js/main.js}"></script>
+
+</body>
+</html>

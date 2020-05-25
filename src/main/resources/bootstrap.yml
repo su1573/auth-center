@@ -1,0 +1,60 @@
+server:
+  session-timeout: 1800
+spring:
+#############应用名称#################
+#############每次生成的新项目必须修改##################
+  application:
+    name: auth-center
+##############配置中心，将编辑好的配置文件导入配置中心下发到应用###############    
+  cloud:
+    config:
+      profile: dev
+      label: master
+      discovery:
+        enabled: false
+        service-id: chinare-cloud-config-server
+  thymeleaf:
+    mode: LEGACYHTML5
+    cache: false
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
+  profiles: 
+    active: dev
+  servlet:
+    multipart:
+      max-file-size: 30Mb
+      max-request-size: 30Mb
+  cache:
+    type: ehcache
+    ehcache:
+      config: classpath:config/ehcache.xml
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+  mapper-locations: mybatis/**/*Mapper.xml
+  typeAliasesPackage: com.chinare.auth.**.domain
+#############注册中心#################
+eureka:
+  client:
+    service-url:
+#      defaultZone: http://106.13.142.212:8761/eureka/
+      defaultZone: http://123.57.80.168:8761/eureka/
+  instance: 
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+    
+#ldap:
+#  url: "ldap://172.16.5.53:389/"
+#  base: DC=chinare,DC=local
+#  userDn: "devops-jira@chinare.local"
+#  userPwd: abcd@123
+#  referral: follow
+
+# 自己搭建
+ldap:
+  url: "ldap://106.13.142.212:389/"
+  base: DC=chinare,DC=local
+  userDn: "cn=Manager,dc=chinare,dc=local"
+  userPwd: 666666
+  referral: follow

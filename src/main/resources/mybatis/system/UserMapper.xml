@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.chinare.auth.dao.UserDao">
+
+	<select id="getUserByServer" resultType="com.chinare.auth.domain.UserDO">
+		<!-- select a.* from sys_user a LEFT JOIN sys_user_application b on a.user_id=b.user_id 
+			LEFT JOIN sys_application c on b.appl_id=c.id WHERE a.user_id=#{userId} -->
+		select
+		<if test="app_name != null">
+			c.app_egl_name,c.app_chn_name,b.user_id AS user_id2,b.appl_id,
+		</if>
+		a.* FROM sys_user a
+		<if test="app_name != null">
+			LEFT JOIN sys_user_application b ON a.user_id = b.user_id
+			LEFT JOIN sys_application c ON b.appl_id = c.id
+		</if>
+
+		<where>
+			<if test="app_name != null">
+				AND c.id IN (SELECT id FROM sys_application WHERE c.app_egl_name =
+				#{app_name})
+			</if>
+		</where>
+
+	</select>
+
+
+
+	<select id="getUserByUserName"
+		resultType="com.chinare.auth.domain.UserDO">
+
+		select
+		<if test="app_name != null">
+			c.app_egl_name,c.app_chn_name,b.user_id AS user_id2,b.appl_id,
+		</if>
+		a.* FROM sys_user a
+		<if test="app_name != null">
+			LEFT JOIN sys_user_application b ON a.user_id = b.user_id
+			LEFT JOIN sys_application c ON b.appl_id = c.id
+		</if>
+
+		WHERE a.username = #{username}
+
+		<if test="app_name != null">
+			AND c.id IN (SELECT id FROM sys_application WHERE app_egl_name =
+			#{app_name})
+		</if>
+
+	</select>
+
+
+
+	<select id="getUserRoleListById" resultType="com.chinare.auth.domain.RoleDO">
+
+		select a.*,b.role_name from sys_user_role a
+		LEFT JOIN sys_role b ON a.role_id = b.role_id
+		 where user_id=#{userId}
+
+	</select>
+
+
+
+	<select id="getUserApp"
+		resultType="com.chinare.auth.domain.ApplDO" parameterType="long">
+
+		SELECT
+		b.app_egl_name,b.app_chn_name,b.base_url,b.email,b.contact,b.tel,b.application_desc,b.data_url
+		from sys_user_application a
+		LEFT JOIN sys_application b
+		on a.appl_id=b.id
+		where a.user_id=#{userId}
+
+	</select>
+	
+	
+	<select id="getUserAuthApp"
+		resultType="com.chinare.auth.domain.ApplDO" parameterType="long">
+
+		SELECT
+		b.app_egl_name,b.app_chn_name,b.base_url,b.email,b.contact,b.tel,b.application_desc,b.data_url
+		from sys_user_auth_application a
+		LEFT JOIN sys_application b
+		on a.appl_id=b.id
+		where a.user_id=#{userId}
+
+	</select>
+
+
+	<select id="getMenuList"
+		resultType="com.chinare.auth.domain.MenuDO"
+		parameterType="java.util.Map">
+		SELECT sm.menu_id
+		,sm.parent_id
+		,sm.name_egl
+		,sm.name_chn
+		,sm.url
+		,sm.perms
+		,sm.type
+		,sm.icon
+		,sm.order_num
+		,sm.gmt_create
+		,sm.gmt_modified
+		FROM sys_menu sm
+		,sys_application sa
+		where sm.appl_id = sa.id
+		and sm.menu_id in (
+		select DISTINCT menu_id
+		from sys_role_menu srm
+		,sys_user_role sur
+		where sur.role_id = srm.role_id
+		and sur.user_id = #{userId} )
+		and sa.app_egl_name = #{appEglName}
+		and sm.type in (0,1)
+		<choose>
+			<when test="sort != null and sort.trim() != ''">
+				order by ${sort} ${order}
+			</when>
+			<otherwise>
+				order by sm.order_num
+			</otherwise>
+		</choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<select id="getUserPermsOfAppl" resultType="string">
+		SELECT DISTINCT
+		m.perms,sa.id,sa.app_egl_name
+		FROM
+		sys_menu m
+		LEFT JOIN sys_role_menu rm
+		ON m.menu_id = rm.menu_id
+		LEFT JOIN sys_user_role ur ON rm.role_id =
+		ur.role_id
+		LEFT JOIN sys_role sr on sr.role_id = ur.role_id
+		LEFT JOIN
+		sys_application sa on sr.appl_id = sa.id
+		WHERE ur.user_id = #{userId}
+		and sa.app_egl_name = #{appEglName}
+	</select>
+
+	<select id="listAllDept" resultType="long">
+		select DISTINCT dept_id from
+		sys_user
+	</select>
+
+	<insert id="addUserLadp" parameterType="java.util.Map">
+		insert into sys_user
+		(username,name,password,dept_id,email,status)
+		VALUES
+		(#{sAMAccountName},#{displayName},#{password},#{deptId},#{mail},#{status})
+	</insert>
+
+
+	<select id="listUserByRoleName"
+		resultType="com.chinare.auth.domain.UserDO">
+		select
+		su.`user_id`,su.`username`,su.`name`,su.`status`,su.`email`,sur.`role_id`,su.`dept_id`,sd.`name` from
+		sys_user su
+		RIGHT JOIN sys_user_role sur ON su.user_id = sur.user_id
+		RIGHT JOIN
+		sys_user_application sua ON su.user_id = sua.user_id
+		RIGHT JOIN
+		sys_role sr ON sr.role_id = sur.role_id
+		RIGHT JOIN sys_application sa
+		ON sua.appl_id=sa.id
+		RIGHT JOIN
+		sys_dept sd ON sd.dept_id=su.dept_id
+		<where>
+			<if test="roleName != null and roleName != ''">and sr.role_name = #{roleName}</if>
+			<if test="applEglName != null and applEglName != ''">and sa.app_egl_name = #{applEglName}</if>
+			<if test="userStatus != null and userStatus != ''">and su.status = #{userStatus}</if>
+			<if test="myName != null and myName != ''">and
+				su.username <![CDATA[ <> ]]>
+				#{myName}
+			</if>
+		</where>
+		 <choose>
+			<when test="sort != null and sort.trim() != ''">
+				order by ${sort} ${order}
+			</when>
+			<otherwise>
+				order by user_id desc
+			</otherwise>
+		</choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if> 
+	</select>
+	
+	
+	<select id="findDeptByUser" resultType="com.chinare.auth.domain.UserDO">
+			select a.user_id,a.username,a.dept_id,b.dept_level,b.name from  sys_user a
+			LEFT JOIN sys_dept b on a.dept_id=b.dept_id
+			<where>
+				<if test="userId != null and userId !=''">and a.user_id=#{userId}</if>
+				<if test="username != null and username !=''">and a.username=#{username}</if>
+				<if test="name != null and name !=''">and a.name=#{name}</if>
+			</where>
+	</select>
+
+	
+	<select id="list" resultType="com.chinare.auth.domain.UserDO">
+			select * from sys_user where dept_id in 
+			(select dept_id from sys_dept b where dept_level LIKE concat(#{deptLevel},"%") )
+	</select>
+	
+	<select id="listSubDeptByDeptId"  resultType="com.chinare.auth.domain.DeptDO">
+			
+			select dept_id,parent_id,dept_level,name from sys_dept b where dept_level LIKE concat(#{deptLevel},"%")
+			
+	</select>
+	
+	<select id="getDeptLevel" resultType="string" parameterType="java.util.Map">
+		select dept_level from sys_dept a where a.dept_id=#{deptId}
+	</select>
+	
+	<select id="listBossByDeptId" resultType="com.chinare.auth.domain.UserDO" parameterType="java.util.Map">
+	select a.* from sys_user a where a.dept_id = #{deptId} and user_type = 1;
+	</select>
+
+	<select id="getUserListByUserNameList" resultType="com.chinare.auth.domain.UserDO" parameterType="java.util.List">
+	select * from sys_user where username in 
+	<foreach collection="list" index="index" item="item" open="(" separator="," close=")">#{item}</foreach>
+	</select>
+
+
+</mapper>
